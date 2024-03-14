@@ -8,56 +8,60 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.Scanner;
 
 public class Tree {
-    public static void main(String[] args) {
+
+    private Document doc;
+
+    public Tree() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Nhập đường dẫn: ");
+        String path = sc.nextLine();
+        File file = new File(path);
+
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dbBuil = dbFactory.newDocumentBuilder();
-            Document doc = dbBuil.newDocument();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            doc = dBuilder.newDocument();
 
-            Element rootElement = doc.createElement("class");
+            Element rootElement = doc.createElement(file.getName());
             doc.appendChild(rootElement);
 
-            Attr total = doc.createAttribute("totalStudents");
-            total.setValue("2");
-            rootElement.setAttributeNode(total);
-
-            Element student1 = doc.createElement("student");
-            rootElement.appendChild(student1);
-            Attr name = doc.createAttribute("name");
-            name.setValue("Anh Tu");
-            student1.setAttributeNode(name);
-            Element age = doc.createElement("age");
-            age.appendChild(doc.createTextNode("18"));
-            student1.appendChild(age);
-            Element gpa = doc.createElement("gpa");
-            gpa.appendChild(doc.createTextNode("4.0"));
-            student1.appendChild(gpa);
-
-            Element student2 = doc.createElement("student");
-            rootElement.appendChild(student2);
-            Attr name1 = doc.createAttribute("name");
-            name1.setValue("Nguyen Hoang");
-            student2.setAttributeNode(name);
-            Element age1 = doc.createElement("age");
-            age1.appendChild(doc.createTextNode("18"));
-            student1.appendChild(age);
-            Element gpa1 = doc.createElement("gpa");
-            gpa1.appendChild(doc.createTextNode("3.7"));
-            student2.appendChild(gpa);
+            Export(rootElement, file);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("D:\\VKU\\6. LẬP TRÌNH JAVA\\XML\\student.xml"));
+            StreamResult result = new StreamResult(new File("file.xml"));
             transformer.transform(source, result);
 
             StreamResult consoleResult = new StreamResult(System.out);
             transformer.transform(source, consoleResult);
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public void Export(Element element, File file) {
+        try {
+          if (file.isDirectory()) {
+            Element ele = doc.createElement(file.getName());
+            element.appendChild(ele);
+            File[] children = file.listFiles();
+            for (File child : children) {
+              Export(ele, child);
+            }
+          } else {
+            Element subElement = doc.createElement(file.getName());
+            element.appendChild(subElement);
+          }
+        } catch (Exception e) {
+    
+        }
+      }
+    public static void main(String[] args) {
+        new Tree();
     }
 }
