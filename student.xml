@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<class totalStudents="2">
+    <student name="Jessica">
+        <age>18</age>
+        <gpa>4.0</gpa>
+    </student>
+    <student name="Eris">
+        <age>18</age>
+        <gpa>3.7</gpa>
+    </student>
+</class>
